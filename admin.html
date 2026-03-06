@@ -229,7 +229,7 @@
 <body>
 
     <div id="overlay">
-        <i class="fas fa-spinner fa-spin fa-3x" style="color: var(--primary);"></i>
+        <i class="fas fa-spinner fa-spin fa-2x" style="color: var(--primary);"></i>
         <p id="loaderText" style="margin-top: 15px; font-weight: 600; color: var(--primary);">Processing Request...</p>
     </div>
 
@@ -294,8 +294,8 @@
 
                     <div style="display:flex; gap:10px;">
                         <div class="form-group" style="flex:1;">
-                            <label>Price (LKR)</label>
-                            <input type="number" id="price" required>
+                            <label>Price (LKR or 'Free')</label>
+                            <input type="text" id="price" placeholder="e.g. 35000 or Free" required>
                         </div>
                         <div class="form-group" style="flex:1;">
                             <label>Installments</label>
@@ -348,7 +348,7 @@
         const API_URL = "https://script.google.com/macros/s/AKfycbxlMiseZ5YjuzOFeNWSaJ5mqQ-EC5tWGIsFbRMGpTCBeGhiqZLLBJRI-Ch2ib6NjFEA/exec";
         const SECURITY_PIN = "456789";
 
-        // Right Click & Inspect Block
+        // Security: Block Right Click & Inspect
         document.addEventListener('contextmenu', e => e.preventDefault());
         document.onkeydown = e => {
             if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && [73, 74, 67].includes(e.keyCode)) || (e.ctrlKey && e.keyCode == 85)) return false;
@@ -358,7 +358,6 @@
             document.getElementById('customCatGroup').style.display = (val === "NEW") ? "block" : "none";
         }
 
-        // Date formatting function (YYYY-MM-DD to YYYY.MM.DD)
         function formatDate(val) {
             if (!val) return;
             const formatted = val.replace(/-/g, '.');
@@ -409,7 +408,7 @@
                 alert("Success!");
                 window.location.reload();
             } catch (err) {
-                alert("Error!");
+                alert("Error connecting to server.");
                 document.getElementById('overlay').style.display = 'none';
             }
         });
@@ -420,7 +419,14 @@
                 const data = await res.json();
                 const tableBody = document.getElementById('tableBody');
 
-                tableBody.innerHTML = data.map(item => `
+                tableBody.innerHTML = data.map(item => {
+                    // Logic to format price properly in table
+                    let displayPrice = item.Price;
+                    if (!isNaN(item.Price) && item.Price !== "") {
+                        displayPrice = "LKR " + Number(item.Price).toLocaleString();
+                    }
+
+                    return `
                     <tr>
                         <td>
                             <div style="font-weight: 700; color: var(--primary);">${item.Name}</div>
@@ -429,7 +435,7 @@
                             </div>
                         </td>
                         <td><span style="background: #eef2ff; color: #4338ca; padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 600;">${item.Category}</span></td>
-                        <td style="font-weight: 700;">LKR ${Number(item.Price).toLocaleString()}</td>
+                        <td style="font-weight: 700; color: #ea580c;">${displayPrice}</td>
                         <td>
                             <div class="action-btns">
                                 <button class="btn-icon edit-icon" onclick='fillForm(${JSON.stringify(item).replace(/'/g, "&apos;")})'><i class="fas fa-pen"></i></button>
@@ -437,7 +443,8 @@
                             </div>
                         </td>
                     </tr>
-                `).join('');
+                `;
+                }).join('');
             } catch (err) {
                 tableBody.innerHTML = "Error loading data.";
             }
@@ -457,7 +464,7 @@
             document.getElementById('dateText').value = item.Date || "";
             document.getElementById('timeText').value = item.Time || "";
             document.getElementById('location').value = item.Location || "";
-            document.getElementById('price').value = item.Price;
+            document.getElementById('price').value = item.Price; // Will load number or 'Free'
             document.getElementById('installments').value = item.Installments || "Yes";
             document.getElementById('apply_link').value = item.Apply_Link || "";
             document.getElementById('image_url').value = item.Image_URL || "";

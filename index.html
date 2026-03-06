@@ -31,10 +31,8 @@
             color: var(--text-main);
             overflow-x: hidden;
             top: 0 !important;
-            /* Google translate fix */
         }
 
-        /* Language Translator Bar */
         .top-bar {
             background: #ffffff;
             padding: 10px 20px;
@@ -127,11 +125,6 @@
             transition: 0.3s;
         }
 
-        .search-box:focus {
-            border-color: var(--nils-blue);
-            background: #fff;
-        }
-
         .category-nav {
             display: flex;
             gap: 12px;
@@ -184,13 +177,13 @@
             overflow: hidden;
             position: relative;
             background: #eee;
+            cursor: zoom-in;
         }
 
         .card-img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: opacity 0.3s;
         }
 
         .badge {
@@ -230,17 +223,6 @@
             margin-bottom: 15px;
         }
 
-        .read-more-btn {
-            color: var(--nils-blue);
-            font-weight: 600;
-            cursor: pointer;
-            font-size: 0.85rem;
-            text-decoration: underline;
-            margin-top: -10px;
-            margin-bottom: 15px;
-            display: inline-block;
-        }
-
         .info-group {
             margin-top: auto;
             padding-top: 15px;
@@ -254,12 +236,6 @@
             align-items: center;
             gap: 10px;
             color: #334155;
-        }
-
-        .info-row i {
-            color: var(--nils-blue);
-            width: 16px;
-            opacity: 0.7;
         }
 
         .price-row {
@@ -284,14 +260,9 @@
             text-decoration: none;
             font-weight: 600;
             margin-top: 20px;
-            transition: 0.3s;
         }
 
-        .apply-btn:hover {
-            background: #002244;
-        }
-
-        /* Modal Popup */
+        /* Modal Overlay for Description */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -315,25 +286,45 @@
             border-radius: 28px;
             padding: 40px;
             position: relative;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
-            animation: modalSlide 0.4s ease-out;
             overflow-y: auto;
         }
 
-        .close-modal {
-            position: sticky;
-            top: -20px;
-            float: right;
-            cursor: pointer;
-            color: #64748b;
-            background: white;
-            padding: 5px;
-            border-radius: 50%;
-            z-index: 10;
-            font-size: 24px;
+        /* Image Viewer Modal */
+        .img-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 3000;
         }
 
-        /* Footer */
+        .img-modal-content {
+            position: relative;
+            max-width: 90%;
+            max-height: 90%;
+        }
+
+        .img-modal-content img {
+            max-width: 100%;
+            max-height: 85vh;
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: -50px;
+            right: 0;
+            color: white;
+            font-size: 35px;
+            cursor: pointer;
+        }
+
         footer {
             background: var(--nils-blue);
             color: white;
@@ -341,29 +332,6 @@
             text-align: center;
             margin-top: 50px;
             border-top: 5px solid var(--nils-gold);
-        }
-
-        footer p {
-            opacity: 0.8;
-            font-size: 0.9rem;
-            margin: 5px 0;
-        }
-
-        .developer {
-            font-weight: 500;
-            color: var(--nils-gold);
-        }
-
-        /* Google Translate Hiding Frame */
-        iframe.goog-te-banner-frame {
-            display: none !important;
-        }
-
-        .goog-te-gadget-simple {
-            border: 1px solid #e2e8f0 !important;
-            border-radius: 8px !important;
-            padding: 6px !important;
-            font-family: 'Poppins' !important;
         }
 
         @media (max-width: 1100px) {
@@ -375,14 +343,6 @@
         @media (max-width: 700px) {
             .course-grid {
                 grid-template-columns: 1fr;
-            }
-
-            header h1 {
-                font-size: 1.8rem;
-            }
-
-            .top-bar {
-                justify-content: center;
             }
         }
     </style>
@@ -402,9 +362,17 @@
 
     <div class="modal-overlay" id="modalOverlay" onclick="closeDesc()">
         <div class="modal-content" onclick="event.stopPropagation()">
-            <span class="close-modal" onclick="closeDesc()"><i class="fa-solid fa-circle-xmark"></i></span>
-            <h2 class="modal-title" id="mTitle">Course Name</h2>
-            <div class="modal-desc" id="mDesc">Description goes here...</div>
+            <span class="close-modal" onclick="closeDesc()" style="float:right; cursor:pointer;"><i
+                    class="fa-solid fa-circle-xmark"></i></span>
+            <h2 id="mTitle" style="color:var(--nils-blue); margin-bottom:15px;">Course Name</h2>
+            <div id="mDesc" style="line-height:1.6; color:var(--text-sub);">Description...</div>
+        </div>
+    </div>
+
+    <div class="img-modal-overlay" id="imgModal" onclick="closeImg()">
+        <div class="img-modal-content" onclick="event.stopPropagation()">
+            <span class="close-btn" onclick="closeImg()">&times;</span>
+            <img id="fullImg" src="" alt="Full View">
         </div>
     </div>
 
@@ -432,12 +400,7 @@
 
     <script type="text/javascript">
         function googleTranslateElementInit() {
-            new google.translate.TranslateElement({
-                pageLanguage: 'en',
-                includedLanguages: 'si,ta,en',
-                layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
-                autoDisplay: false
-            }, 'google_translate_element');
+            new google.translate.TranslateElement({ pageLanguage: 'en', includedLanguages: 'si,ta,en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE, autoDisplay: false }, 'google_translate_element');
         }
     </script>
     <script type="text/javascript"
@@ -451,15 +414,13 @@
 
         document.getElementById('year').textContent = new Date().getFullYear();
 
-        // Optimized Image Loading (Lazy + Google Drive Quality Control)
         function fixImg(url) {
             if (!url) return 'https://via.placeholder.com/600x600?text=No+Preview';
             if (url.includes('drive.google.com')) {
                 let id = "";
                 if (url.includes('id=')) { id = url.split('id=')[1].split('&')[0]; }
                 else if (url.includes('/d/')) { id = url.split('/d/')[1].split('/')[0]; }
-                // Changed to =w400 for better performance (Smaller quality but looks good on cards)
-                return `https://lh3.googleusercontent.com/d/${id}=w400`;
+                return `https://lh3.googleusercontent.com/d/${id}=w1000`;
             }
             return url;
         }
@@ -510,15 +471,22 @@
                 const shortDesc = item.Description ? (item.Description.length > 90 ? item.Description.substring(0, 90) + "..." : item.Description) : "";
                 const hasMore = item.Description && item.Description.length > 90;
 
+                // --- Price Logic ---
+                let priceDisplay = "";
+                const pValue = String(item.Price).trim();
+                if (pValue.toLowerCase() === "free") {
+                    priceDisplay = "FREE";
+                } else {
+                    priceDisplay = "LKR " + Number(item.Price).toLocaleString();
+                }
+
+                const imgSrc = fixImg(item.Image_URL);
+
                 return `
             <div class="card">
-                <div class="card-img-container">
+                <div class="card-img-container" onclick="openImg('${imgSrc}')">
                     <span class="badge">${item.Category}</span>
-                    <img src="${fixImg(item.Image_URL)}" 
-                         class="card-img" 
-                         alt="Course" 
-                         loading="lazy"
-                         onerror="this.src='https://via.placeholder.com/600x600?text=No+Image'">
+                    <img src="${imgSrc}" class="card-img" alt="Course" loading="lazy" onerror="this.src='https://via.placeholder.com/600x600?text=No+Image'">
                 </div>
                 <div class="card-body">
                     <h3>${item.Name}</h3>
@@ -532,7 +500,7 @@
                     </div>
 
                     <div class="price-row">
-                        <div class="price-tag">LKR ${Number(item.Price).toLocaleString()}</div>
+                        <div class="price-tag">${priceDisplay}</div>
                         ${item.Installments === "Yes" ? '<div style="color:#16a34a; font-size:11px; font-weight:600;"><i class="fa-solid fa-circle-check"></i> Installments Available</div>' : ''}
                     </div>
                     <a href="${item.Apply_Link || '#'}" target="_blank" class="apply-btn">Register Online</a>
@@ -549,6 +517,7 @@
             applyFilters();
         }
 
+        // Description Modal Logic
         function openDesc(title, desc) {
             document.getElementById('mTitle').innerText = title;
             document.getElementById('mDesc').innerHTML = desc;
@@ -558,6 +527,18 @@
 
         function closeDesc() {
             document.getElementById('modalOverlay').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        // Image Viewer Logic
+        function openImg(src) {
+            document.getElementById('fullImg').src = src;
+            document.getElementById('imgModal').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeImg() {
+            document.getElementById('imgModal').style.display = 'none';
             document.body.style.overflow = 'auto';
         }
 
