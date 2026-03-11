@@ -29,8 +29,10 @@
             background-color: var(--bg);
             color: var(--text-dark);
             margin: 0;
-            padding: 20px;
+            padding: 15px;
+            /* Reduced for mobile */
             user-select: none;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .dashboard-container {
@@ -42,39 +44,65 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             background: var(--primary);
-            padding: 20px;
+            padding: 15px 20px;
             border-radius: 12px;
             color: white;
             border-bottom: 5px solid var(--accent);
         }
 
+        header h1 {
+            font-size: 1.1rem;
+            margin: 0;
+        }
+
         .main-layout {
             display: grid;
-            grid-template-columns: 420px 1fr;
-            gap: 25px;
+            grid-template-columns: 1fr;
+            /* Default for mobile */
+            gap: 20px;
+        }
+
+        /* Desktop View Layout */
+        @media (min-width: 1024px) {
+            .main-layout {
+                grid-template-columns: 400px 1fr;
+            }
+
+            header h1 {
+                font-size: 1.4rem;
+            }
+
+            body {
+                padding: 20px;
+            }
         }
 
         .admin-card {
             background: var(--card);
-            padding: 25px;
+            padding: 20px;
             border-radius: 16px;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
-            position: sticky;
-            top: 20px;
             height: fit-content;
         }
 
+        @media (min-width: 1024px) {
+            .admin-card {
+                position: sticky;
+                top: 20px;
+            }
+        }
+
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 12px;
         }
 
         label {
             display: block;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             font-weight: 600;
-            margin-bottom: 6px;
+            margin-bottom: 5px;
             color: #64748b;
         }
 
@@ -82,42 +110,48 @@
         select,
         textarea {
             width: 100%;
-            padding: 12px;
+            padding: 10px 12px;
             border: 1.5px solid #e2e8f0;
             border-radius: 10px;
             font-size: 0.9rem;
             outline: none;
+            transition: 0.2s;
         }
 
         input:focus {
             border-color: var(--primary);
+            background: #fff;
         }
 
+        /* Multi-select styling */
         .category-container {
             background: #f8fafc;
-            padding: 12px;
+            padding: 10px;
             border-radius: 10px;
             border: 1.5px solid #e2e8f0;
-            max-height: 150px;
+            max-height: 140px;
             overflow-y: auto;
         }
 
         .cat-option {
             display: flex;
             align-items: center;
-            gap: 8px;
-            margin-bottom: 5px;
+            gap: 10px;
+            margin-bottom: 6px;
             font-size: 0.85rem;
             cursor: pointer;
+            padding: 4px 0;
         }
 
         .cat-option input {
             width: auto;
-            margin: 0;
+            height: 16px;
+            width: 16px;
+            cursor: pointer;
         }
 
         .search-wrapper {
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             position: relative;
         }
 
@@ -130,42 +164,48 @@
         }
 
         .search-wrapper input {
-            padding-left: 45px;
+            padding: 12px 12px 12px 45px;
             background: white;
             border: none;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
         }
 
+        /* Table Responsiveness */
         .table-container {
             background: var(--card);
             border-radius: 16px;
-            overflow: hidden;
+            overflow-x: auto;
+            /* Enables horizontal scroll for mobile */
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            -webkit-overflow-scrolling: touch;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
+            min-width: 600px;
+            /* Ensures table doesn't squish too much */
         }
 
         th {
             background: #f8fafc;
-            padding: 15px;
+            padding: 12px 15px;
             text-align: left;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             text-transform: uppercase;
+            color: #64748b;
         }
 
         td {
-            padding: 15px;
+            padding: 12px 15px;
             border-bottom: 1px solid #f1f5f9;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
         }
 
         .btn-stack {
             display: flex;
             gap: 10px;
-            margin-top: 20px;
+            margin-top: 15px;
         }
 
         .save-btn {
@@ -173,7 +213,7 @@
             color: white;
             cursor: pointer;
             border-radius: 10px;
-            padding: 14px;
+            padding: 12px;
             border: none;
             font-weight: 600;
             flex: 1;
@@ -184,25 +224,28 @@
             color: #475569;
             cursor: pointer;
             border-radius: 10px;
-            padding: 14px;
+            padding: 12px;
             border: none;
             display: none;
+            flex: 1;
         }
 
         .action-btns {
             display: flex;
-            gap: 8px;
+            gap: 6px;
+            justify-content: center;
         }
 
         .btn-icon {
-            width: 35px;
-            height: 35px;
+            width: 34px;
+            height: 34px;
             border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             border: none;
+            transition: 0.2s;
         }
 
         .edit-icon {
@@ -227,6 +270,21 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            text-align: center;
+            padding: 20px;
+        }
+
+        /* Helper for flexible rows in form */
+        .flex-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        @media (max-width: 480px) {
+            .flex-row {
+                flex-direction: column;
+                gap: 0;
+            }
         }
     </style>
 </head>
@@ -240,24 +298,24 @@
 
     <div class="dashboard-container">
         <header>
-            <h1><i class="fas fa-shield-alt"></i> NILS Programme Manager</h1>
-            <div style="font-size: 0.8rem;"><i class="fas fa-circle" style="color: #10b981;"></i> System Online</div>
+            <h1><i class="fas fa-shield-alt"></i> NILS Portal</h1>
+            <div style="font-size: 0.7rem;"><i class="fas fa-circle" style="color: #10b981;"></i> Online</div>
         </header>
 
         <div class="main-layout">
             <div class="admin-card">
-                <h2 id="formTitle" style="margin-top:0; font-size: 1.1rem; color: var(--primary);">Add New Programme
-                </h2>
+                <h2 id="formTitle" style="margin-top:0; font-size: 1.1rem; color: var(--primary); margin-bottom: 15px;">
+                    Add Programme</h2>
                 <form id="adminForm">
                     <input type="hidden" id="rowId">
 
                     <div class="form-group">
                         <label>Programme Name</label>
-                        <input type="text" id="name" required>
+                        <input type="text" id="name" required placeholder="e.g. Diploma in HRM">
                     </div>
 
                     <div class="form-group">
-                        <label>Categories (Select Multiple)</label>
+                        <label>Categories (Multi-select)</label>
                         <div class="category-container" id="categoryOptions">
                             <label class="cat-option"><input type="checkbox" value="One Day Programs"> One Day
                                 Programs</label>
@@ -269,16 +327,16 @@
                                 Courses</label>
                             <label class="cat-option"><input type="checkbox" value="Free"> Free</label>
                         </div>
-                        <input type="text" id="customCategory" placeholder="Other tags (comma separated)"
+                        <input type="text" id="customCategory" placeholder="Other tags (e.g. Online, Weekend)"
                             style="margin-top: 8px;">
                     </div>
 
                     <div class="form-group">
                         <label>Description</label>
-                        <textarea id="description" rows="2"></textarea>
+                        <textarea id="description" rows="2" placeholder="Brief details..."></textarea>
                     </div>
 
-                    <div style="display:flex; gap:10px;">
+                    <div class="flex-row">
                         <div class="form-group" style="flex:1;">
                             <label>Date (YYYY.MM.DD)</label>
                             <input type="date" id="datePicker" onchange="formatDate(this.value)">
@@ -296,10 +354,10 @@
                         <input type="text" id="location" value="NILS Auditorium">
                     </div>
 
-                    <div style="display:flex; gap:10px;">
+                    <div class="flex-row">
                         <div class="form-group" style="flex:1;">
                             <label>Price</label>
-                            <input type="text" id="price" required>
+                            <input type="text" id="price" required placeholder="35000 or Free">
                         </div>
                         <div class="form-group" style="flex:1;">
                             <label>Installments</label>
@@ -312,12 +370,12 @@
 
                     <div class="form-group">
                         <label>Apply Link</label>
-                        <input type="url" id="apply_link">
+                        <input type="url" id="apply_link" placeholder="https://...">
                     </div>
 
                     <div class="form-group">
                         <label>Image URL</label>
-                        <input type="url" id="image_url">
+                        <input type="url" id="image_url" placeholder="Direct link to image">
                     </div>
 
                     <div class="btn-stack">
@@ -327,15 +385,15 @@
                 </form>
             </div>
 
-            <div>
+            <div class="content-side">
                 <div class="search-wrapper">
                     <i class="fas fa-search"></i>
                     <input type="text" id="searchInput" onkeyup="filterTable()"
-                        placeholder="Search by name, date (YYYY.MM.DD) or category...">
+                        placeholder="Search by name, date or category...">
                 </div>
 
                 <div class="table-container">
-                    <table>
+                    <table id="programmeTable">
                         <thead>
                             <tr>
                                 <th>Programme Info</th>
@@ -346,7 +404,7 @@
                         </thead>
                         <tbody id="tableBody">
                             <tr>
-                                <td colspan="4" style="text-align:center; padding:50px;">Loading data...</td>
+                                <td colspan="4" style="text-align:center; padding:40px;">Loading database...</td>
                             </tr>
                         </tbody>
                     </table>
@@ -377,20 +435,18 @@
             let custom = document.getElementById('customCategory').value.trim();
             if (custom) {
                 custom.split(',').forEach(tag => {
-                    if (!selected.includes(tag.trim())) selected.push(tag.trim());
+                    if (tag.trim() && !selected.includes(tag.trim())) selected.push(tag.trim());
                 });
             }
             return selected.join(', ');
         }
 
-        // --- UPDATED SEARCH FUNCTION ---
         function filterTable() {
             const query = document.getElementById('searchInput').value.toLowerCase();
             const filtered = allData.filter(item => {
                 const nameMatch = (item.Name || "").toLowerCase().includes(query);
                 const categoryMatch = (item.Category || "").toLowerCase().includes(query);
                 const dateMatch = (item.Date || "").toLowerCase().includes(query);
-
                 return nameMatch || categoryMatch || dateMatch;
             });
             renderTable(filtered);
@@ -402,28 +458,34 @@
                 allData = await res.json();
                 renderTable(allData);
             } catch (err) {
-                document.getElementById('tableBody').innerHTML = "Error loading data.";
+                document.getElementById('tableBody').innerHTML = "<tr><td colspan='4' style='text-align:center;'>Error loading data. Check connection.</td></tr>";
             }
         }
 
         function renderTable(data) {
             const tableBody = document.getElementById('tableBody');
+            if (data.length === 0) {
+                tableBody.innerHTML = "<tr><td colspan='4' style='text-align:center; padding:20px;'>No results found.</td></tr>";
+                return;
+            }
             tableBody.innerHTML = data.map(item => `
                 <tr>
                     <td>
                         <div style="font-weight: 700; color: var(--primary);">${item.Name}</div>
-                        <div style="font-size: 0.75rem; color: #64748b; margin-top: 3px;">
+                        <div style="font-size: 0.7rem; color: #64748b; margin-top: 4px;">
                             <i class="far fa-calendar-alt"></i> ${item.Date || 'N/A'} | <i class="fas fa-clock"></i> ${item.Time || 'N/A'}
                         </div>
                     </td>
                     <td>
-                        ${item.Category.split(',').map(cat => `<span style="background: #eef2ff; color: #4338ca; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; margin-right: 4px; display: inline-block; margin-bottom: 2px;">${cat.trim()}</span>`).join('')}
+                        <div style="display:flex; flex-wrap:wrap; gap:4px;">
+                            ${item.Category.split(',').map(cat => cat.trim() ? `<span style="background: #eef2ff; color: #4338ca; padding: 2px 7px; border-radius: 4px; font-size: 0.65rem; font-weight:600;">${cat.trim()}</span>` : '').join('')}
+                        </div>
                     </td>
-                    <td style="font-weight: 700; color: #ea580c;">${item.Price}</td>
+                    <td style="font-weight: 700; color: #ea580c; white-space:nowrap;">${item.Price}</td>
                     <td>
                         <div class="action-btns">
-                            <button class="btn-icon edit-icon" onclick='fillForm(${JSON.stringify(item).replace(/'/g, "&apos;")})'><i class="fas fa-pen"></i></button>
-                            <button class="btn-icon del-icon" onclick="deleteItem(${item.rowId})"><i class="fas fa-trash-alt"></i></button>
+                            <button title="Edit" class="btn-icon edit-icon" onclick='fillForm(${JSON.stringify(item).replace(/'/g, "&apos;")})'><i class="fas fa-pen"></i></button>
+                            <button title="Delete" class="btn-icon del-icon" onclick="deleteItem(${item.rowId})"><i class="fas fa-trash-alt"></i></button>
                         </div>
                     </td>
                 </tr>
@@ -432,11 +494,11 @@
 
         document.getElementById('adminForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const pin = prompt("Enter Admin PIN:");
-            if (pin !== SECURITY_PIN) return alert("Invalid PIN");
+            const pin = prompt("Security PIN Required:");
+            if (pin !== SECURITY_PIN) return alert("Unauthorized access!");
 
             const rowId = document.getElementById('rowId').value;
-            showLoader(rowId ? "Updating..." : "Saving...");
+            showLoader(rowId ? "Updating Programme..." : "Adding Programme...");
 
             const payload = {
                 action: rowId ? "update" : "add",
@@ -457,7 +519,7 @@
                 await fetch(API_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) });
                 window.location.reload();
             } catch (err) {
-                alert("Connection error.");
+                alert("Failed to connect to server.");
                 document.getElementById('overlay').style.display = 'none';
             }
         });
@@ -489,8 +551,8 @@
             document.getElementById('apply_link').value = item.Apply_Link || "";
             document.getElementById('image_url').value = item.Image_URL || "";
 
-            document.getElementById('formTitle').innerText = "Edit: " + item.Name;
-            document.getElementById('saveBtn').innerText = "Update Now";
+            document.getElementById('formTitle').innerText = "Edit Mode";
+            document.getElementById('saveBtn').innerText = "Update Programme";
             document.getElementById('saveBtn').style.background = "var(--warning)";
             document.getElementById('cancelBtn').style.display = "block";
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -500,17 +562,17 @@
             document.getElementById('adminForm').reset();
             document.getElementById('rowId').value = "";
             document.querySelectorAll('#categoryOptions input').forEach(cb => cb.checked = false);
-            document.getElementById('formTitle').innerText = "Add New Programme";
+            document.getElementById('formTitle').innerText = "Add Programme";
             document.getElementById('saveBtn').style.background = "var(--primary)";
             document.getElementById('saveBtn').innerText = "Save Programme";
             document.getElementById('cancelBtn').style.display = "none";
         }
 
         async function deleteItem(id) {
-            if (confirm("Delete this?")) {
-                const pin = prompt("Enter PIN:");
+            if (confirm("Are you sure you want to delete this programme?")) {
+                const pin = prompt("Enter PIN to confirm deletion:");
                 if (pin !== SECURITY_PIN) return;
-                showLoader("Deleting...");
+                showLoader("Removing...");
                 await fetch(API_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: "delete", rowId: id }) });
                 window.location.reload();
             }
