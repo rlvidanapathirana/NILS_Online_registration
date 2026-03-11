@@ -30,19 +30,11 @@
             color: var(--text-dark);
             margin: 0;
             padding: 20px;
-            top: 0 !important;
-        }
-
-        /* Inspect element protection style */
-        body {
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
             user-select: none;
         }
 
         .dashboard-container {
-            max-width: 1300px;
+            max-width: 1400px;
             margin: auto;
         }
 
@@ -56,11 +48,6 @@
             border-radius: 12px;
             color: white;
             border-bottom: 5px solid var(--accent);
-        }
-
-        header h1 {
-            font-size: 1.4rem;
-            margin: 0;
         }
 
         .main-layout {
@@ -99,47 +86,54 @@
             border: 1.5px solid #e2e8f0;
             border-radius: 10px;
             font-size: 0.9rem;
-            transition: 0.3s;
             outline: none;
         }
 
-        input:focus,
-        select:focus,
-        textarea:focus {
+        input:focus {
             border-color: var(--primary);
-            box-shadow: 0 0 0 4px rgba(0, 51, 102, 0.1);
         }
 
-        .btn-stack {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
-        }
-
-        button {
-            cursor: pointer;
-            border: none;
+        .category-container {
+            background: #f8fafc;
+            padding: 12px;
             border-radius: 10px;
-            padding: 14px 20px;
-            font-weight: 600;
-            transition: 0.3s;
-            flex: 1;
+            border: 1.5px solid #e2e8f0;
+            max-height: 150px;
+            overflow-y: auto;
         }
 
-        .save-btn {
-            background: var(--primary);
-            color: white;
+        .cat-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 5px;
+            font-size: 0.85rem;
+            cursor: pointer;
         }
 
-        .save-btn:hover {
-            background: #002244;
-            transform: translateY(-2px);
+        .cat-option input {
+            width: auto;
+            margin: 0;
         }
 
-        .cancel-btn {
-            background: #e2e8f0;
-            color: #475569;
-            display: none;
+        .search-wrapper {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .search-wrapper i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+        }
+
+        .search-wrapper input {
+            padding-left: 45px;
+            background: white;
+            border: none;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
         }
 
         .table-container {
@@ -156,12 +150,10 @@
 
         th {
             background: #f8fafc;
-            color: #64748b;
             padding: 15px;
             text-align: left;
             font-size: 0.75rem;
             text-transform: uppercase;
-            border-bottom: 2px solid #edf2f7;
         }
 
         td {
@@ -170,23 +162,47 @@
             font-size: 0.9rem;
         }
 
+        .btn-stack {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .save-btn {
+            background: var(--primary);
+            color: white;
+            cursor: pointer;
+            border-radius: 10px;
+            padding: 14px;
+            border: none;
+            font-weight: 600;
+            flex: 1;
+        }
+
+        .cancel-btn {
+            background: #e2e8f0;
+            color: #475569;
+            cursor: pointer;
+            border-radius: 10px;
+            padding: 14px;
+            border: none;
+            display: none;
+        }
+
         .action-btns {
             display: flex;
             gap: 8px;
-            justify-content: center;
         }
 
         .btn-icon {
-            width: 38px;
-            height: 38px;
-            border-radius: 10px;
+            width: 35px;
+            height: 35px;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             border: none;
-            transition: 0.2s;
-            flex: none;
         }
 
         .edit-icon {
@@ -199,37 +215,18 @@
             color: var(--danger);
         }
 
-        .edit-icon:hover {
-            background: var(--warning);
-            color: white;
-        }
-
-        .del-icon:hover {
-            background: var(--danger);
-            color: white;
-        }
-
         #overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(255, 255, 255, 0.85);
+            background: rgba(255, 255, 255, 0.9);
             display: none;
             z-index: 9999;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-        }
-
-        .custom-cat-group {
-            display: none;
-            margin-top: 10px;
-            background: #fffcf0;
-            padding: 10px;
-            border-radius: 8px;
-            border: 1px dashed var(--warning);
         }
     </style>
 </head>
@@ -237,8 +234,8 @@
 <body>
 
     <div id="overlay">
-        <i class="fas fa-spinner fa-spin fa-2x" style="color: var(--primary);"></i>
-        <p id="loaderText" style="margin-top: 15px; font-weight: 600; color: var(--primary);">Processing Request...</p>
+        <i class="fas fa-spinner fa-spin fa-3x" style="color: var(--primary);"></i>
+        <p id="loaderText" style="margin-top: 15px; font-weight: 600;">Processing Request...</p>
     </div>
 
     <div class="dashboard-container">
@@ -249,63 +246,60 @@
 
         <div class="main-layout">
             <div class="admin-card">
-                <h2 id="formTitle" style="margin-top:0; font-size: 1.1rem; margin-bottom: 20px; color: var(--primary);">
-                    Add New Programme</h2>
-                <p style="font-size: 0.75rem; color: #94a3b8; margin-bottom: 15px;">Tip: For multiple categories, use a
-                    comma (e.g., Diploma, Free)</p>
+                <h2 id="formTitle" style="margin-top:0; font-size: 1.1rem; color: var(--primary);">Add New Programme
+                </h2>
                 <form id="adminForm">
                     <input type="hidden" id="rowId">
 
                     <div class="form-group">
                         <label>Programme Name</label>
-                        <input type="text" id="name" placeholder="Enter course title" required>
+                        <input type="text" id="name" required>
                     </div>
 
                     <div class="form-group">
-                        <label>Category (Use comma for tags)</label>
-                        <select id="category" onchange="checkCategory(this.value)">
-                            <option value="One Day Programs">One Day Programs</option>
-                            <option value="Two Day Programs">Two Day Programs</option>
-                            <option value="Diploma">Diploma</option>
-                            <option value="Workshops">Workshops</option>
-                            <option value="Certificate Courses">Certificate Courses</option>
-                            <option value="NEW">-- Add New Category / Multi-Category --</option>
-                        </select>
-                        <div id="customCatGroup" class="custom-cat-group">
-                            <label style="color: var(--warning);">Custom Category / Tags:</label>
-                            <input type="text" id="customCategory" placeholder="e.g., Diploma, Free">
+                        <label>Categories (Select Multiple)</label>
+                        <div class="category-container" id="categoryOptions">
+                            <label class="cat-option"><input type="checkbox" value="One Day Programs"> One Day
+                                Programs</label>
+                            <label class="cat-option"><input type="checkbox" value="Two Day Programs"> Two Day
+                                Programs</label>
+                            <label class="cat-option"><input type="checkbox" value="Diploma"> Diploma</label>
+                            <label class="cat-option"><input type="checkbox" value="Workshops"> Workshops</label>
+                            <label class="cat-option"><input type="checkbox" value="Certificate Courses"> Certificate
+                                Courses</label>
+                            <label class="cat-option"><input type="checkbox" value="Free"> Free</label>
                         </div>
+                        <input type="text" id="customCategory" placeholder="Other tags (comma separated)"
+                            style="margin-top: 8px;">
                     </div>
 
                     <div class="form-group">
                         <label>Description</label>
-                        <textarea id="description" rows="3" placeholder="Course details..."></textarea>
+                        <textarea id="description" rows="2"></textarea>
                     </div>
 
                     <div style="display:flex; gap:10px;">
                         <div class="form-group" style="flex:1;">
                             <label>Date (YYYY.MM.DD)</label>
                             <input type="date" id="datePicker" onchange="formatDate(this.value)">
-                            <input type="text" id="dateText" style="margin-top:5px; font-size: 0.8rem;"
-                                placeholder="YYYY.MM.DD">
+                            <input type="text" id="dateText" placeholder="YYYY.MM.DD" style="margin-top:5px;">
                         </div>
                         <div class="form-group" style="flex:1;">
                             <label>Time</label>
-                            <input type="time" id="timePicker" onchange="syncTime(this.value)">
-                            <input type="text" id="timeText" style="margin-top:5px; font-size: 0.8rem;"
-                                placeholder="Manual time/range">
+                            <input type="time" onchange="document.getElementById('timeText').value = this.value">
+                            <input type="text" id="timeText" placeholder="Time/Range" style="margin-top:5px;">
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label>Location</label>
-                        <input type="text" id="location" value="NILS Narahenpita">
+                        <input type="text" id="location" value="NILS Auditorium">
                     </div>
 
                     <div style="display:flex; gap:10px;">
                         <div class="form-group" style="flex:1;">
-                            <label>Price (LKR or 'Free')</label>
-                            <input type="text" id="price" placeholder="e.g. 35000 or Free" required>
+                            <label>Price</label>
+                            <input type="text" id="price" required>
                         </div>
                         <div class="form-group" style="flex:1;">
                             <label>Installments</label>
@@ -318,38 +312,45 @@
 
                     <div class="form-group">
                         <label>Apply Link</label>
-                        <input type="url" id="apply_link" placeholder="Paste link here">
+                        <input type="url" id="apply_link">
                     </div>
 
                     <div class="form-group">
                         <label>Image URL</label>
-                        <input type="url" id="image_url" placeholder="Paste image link">
+                        <input type="url" id="image_url">
                     </div>
 
                     <div class="btn-stack">
-                        <button type="button" id="cancelBtn" class="cancel-btn" onclick="resetForm()">Cancel
-                            Edit</button>
+                        <button type="button" id="cancelBtn" class="cancel-btn" onclick="resetForm()">Cancel</button>
                         <button type="submit" id="saveBtn" class="save-btn">Save Programme</button>
                     </div>
                 </form>
             </div>
 
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Programme Info</th>
-                            <th>Category</th>
-                            <th>Price</th>
-                            <th style="text-align: center;">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tableBody">
-                        <tr>
-                            <td colspan="4" style="text-align:center; padding:50px;">Loading data...</td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div>
+                <div class="search-wrapper">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" onkeyup="filterTable()"
+                        placeholder="Search by name, date (YYYY.MM.DD) or category...">
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Programme Info</th>
+                                <th>Categories</th>
+                                <th>Price</th>
+                                <th style="text-align: center;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                            <tr>
+                                <td colspan="4" style="text-align:center; padding:50px;">Loading data...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
@@ -357,51 +358,90 @@
     <script>
         const API_URL = "https://script.google.com/macros/s/AKfycbxlMiseZ5YjuzOFeNWSaJ5mqQ-EC5tWGIsFbRMGpTCBeGhiqZLLBJRI-Ch2ib6NjFEA/exec";
         const SECURITY_PIN = "456789";
+        let allData = [];
 
-        // Security: Block Right Click & Inspect
         document.addEventListener('contextmenu', e => e.preventDefault());
-        document.onkeydown = e => {
-            if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && [73, 74, 67].includes(e.keyCode)) || (e.ctrlKey && e.keyCode == 85)) return false;
-        };
-
-        function checkCategory(val) {
-            document.getElementById('customCatGroup').style.display = (val === "NEW") ? "block" : "none";
-        }
-
-        function formatDate(val) {
-            if (!val) return;
-            const formatted = val.replace(/-/g, '.');
-            document.getElementById('dateText').value = formatted;
-        }
-
-        function syncTime(val) { document.getElementById('timeText').value = val; }
 
         function showLoader(text) {
             document.getElementById('overlay').style.display = 'flex';
             document.getElementById('loaderText').innerText = text;
         }
 
-        function verifyPIN() {
-            const input = prompt("Security Alert: Enter Admin PIN to confirm:");
-            if (input === SECURITY_PIN) return true;
-            if (input !== null) alert("Invalid PIN.");
-            return false;
+        function formatDate(val) {
+            if (val) document.getElementById('dateText').value = val.replace(/-/g, '.');
+        }
+
+        function getSelectedCategories() {
+            let selected = [];
+            document.querySelectorAll('#categoryOptions input:checked').forEach(cb => selected.push(cb.value));
+            let custom = document.getElementById('customCategory').value.trim();
+            if (custom) {
+                custom.split(',').forEach(tag => {
+                    if (!selected.includes(tag.trim())) selected.push(tag.trim());
+                });
+            }
+            return selected.join(', ');
+        }
+
+        // --- UPDATED SEARCH FUNCTION ---
+        function filterTable() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = allData.filter(item => {
+                const nameMatch = (item.Name || "").toLowerCase().includes(query);
+                const categoryMatch = (item.Category || "").toLowerCase().includes(query);
+                const dateMatch = (item.Date || "").toLowerCase().includes(query);
+
+                return nameMatch || categoryMatch || dateMatch;
+            });
+            renderTable(filtered);
+        }
+
+        async function loadAdminTable() {
+            try {
+                const res = await fetch(API_URL);
+                allData = await res.json();
+                renderTable(allData);
+            } catch (err) {
+                document.getElementById('tableBody').innerHTML = "Error loading data.";
+            }
+        }
+
+        function renderTable(data) {
+            const tableBody = document.getElementById('tableBody');
+            tableBody.innerHTML = data.map(item => `
+                <tr>
+                    <td>
+                        <div style="font-weight: 700; color: var(--primary);">${item.Name}</div>
+                        <div style="font-size: 0.75rem; color: #64748b; margin-top: 3px;">
+                            <i class="far fa-calendar-alt"></i> ${item.Date || 'N/A'} | <i class="fas fa-clock"></i> ${item.Time || 'N/A'}
+                        </div>
+                    </td>
+                    <td>
+                        ${item.Category.split(',').map(cat => `<span style="background: #eef2ff; color: #4338ca; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; margin-right: 4px; display: inline-block; margin-bottom: 2px;">${cat.trim()}</span>`).join('')}
+                    </td>
+                    <td style="font-weight: 700; color: #ea580c;">${item.Price}</td>
+                    <td>
+                        <div class="action-btns">
+                            <button class="btn-icon edit-icon" onclick='fillForm(${JSON.stringify(item).replace(/'/g, "&apos;")})'><i class="fas fa-pen"></i></button>
+                            <button class="btn-icon del-icon" onclick="deleteItem(${item.rowId})"><i class="fas fa-trash-alt"></i></button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
         }
 
         document.getElementById('adminForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            if (!verifyPIN()) return;
+            const pin = prompt("Enter Admin PIN:");
+            if (pin !== SECURITY_PIN) return alert("Invalid PIN");
 
             const rowId = document.getElementById('rowId').value;
             showLoader(rowId ? "Updating..." : "Saving...");
 
-            let finalCategory = document.getElementById('category').value;
-            if (finalCategory === "NEW") finalCategory = document.getElementById('customCategory').value;
-
             const payload = {
                 action: rowId ? "update" : "add",
                 rowId: parseInt(rowId),
-                category: finalCategory,
+                category: getSelectedCategories(),
                 name: document.getElementById('name').value,
                 description: document.getElementById('description').value,
                 date: document.getElementById('dateText').value,
@@ -415,65 +455,30 @@
 
             try {
                 await fetch(API_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) });
-                alert("Task Successful!");
                 window.location.reload();
             } catch (err) {
-                alert("Error connecting to server.");
+                alert("Connection error.");
                 document.getElementById('overlay').style.display = 'none';
             }
         });
 
-        async function loadAdminTable() {
-            try {
-                const res = await fetch(API_URL);
-                const data = await res.json();
-                const tableBody = document.getElementById('tableBody');
-
-                tableBody.innerHTML = data.map(item => {
-                    let displayPrice = item.Price;
-                    if (!isNaN(item.Price) && item.Price !== "") {
-                        displayPrice = "LKR " + Number(item.Price).toLocaleString();
-                    }
-
-                    return `
-                    <tr>
-                        <td>
-                            <div style="font-weight: 700; color: var(--primary);">${item.Name}</div>
-                            <div style="font-size: 0.75rem; color: #64748b; margin-top: 3px;">
-                                <i class="far fa-calendar-alt"></i> ${item.Date || 'N/A'} | <i class="fas fa-clock"></i> ${item.Time || 'N/A'}
-                            </div>
-                        </td>
-                        <td><span style="background: #eef2ff; color: #4338ca; padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 600;">${item.Category}</span></td>
-                        <td style="font-weight: 700; color: #ea580c;">${displayPrice}</td>
-                        <td>
-                            <div class="action-btns">
-                                <button class="btn-icon edit-icon" onclick='fillForm(${JSON.stringify(item).replace(/'/g, "&apos;")})'><i class="fas fa-pen"></i></button>
-                                <button class="btn-icon del-icon" onclick="deleteItem(${item.rowId})"><i class="fas fa-trash-alt"></i></button>
-                            </div>
-                        </td>
-                    </tr>
-                `;
-                }).join('');
-            } catch (err) {
-                tableBody.innerHTML = "Error loading data.";
-            }
-        }
-
         function fillForm(item) {
+            resetForm();
             document.getElementById('rowId').value = item.rowId;
             document.getElementById('name').value = item.Name;
 
-            const catSelect = document.getElementById('category');
-            const exists = Array.from(catSelect.options).some(opt => opt.value === item.Category);
+            const categories = (item.Category || "").split(',').map(c => c.trim());
+            const checkboxes = document.querySelectorAll('#categoryOptions input');
+            let manualTags = [];
 
-            if (exists) {
-                catSelect.value = item.Category;
-                checkCategory(item.Category);
-            } else {
-                catSelect.value = "NEW";
-                checkCategory("NEW");
-                document.getElementById('customCategory').value = item.Category;
-            }
+            categories.forEach(cat => {
+                let found = false;
+                checkboxes.forEach(cb => {
+                    if (cb.value === cat) { cb.checked = true; found = true; }
+                });
+                if (!found && cat !== "") manualTags.push(cat);
+            });
+            document.getElementById('customCategory').value = manualTags.join(', ');
 
             document.getElementById('description').value = item.Description || "";
             document.getElementById('dateText').value = item.Date || "";
@@ -494,27 +499,25 @@
         function resetForm() {
             document.getElementById('adminForm').reset();
             document.getElementById('rowId').value = "";
+            document.querySelectorAll('#categoryOptions input').forEach(cb => cb.checked = false);
             document.getElementById('formTitle').innerText = "Add New Programme";
             document.getElementById('saveBtn').style.background = "var(--primary)";
             document.getElementById('saveBtn').innerText = "Save Programme";
             document.getElementById('cancelBtn').style.display = "none";
-            document.getElementById('customCatGroup').style.display = "none";
         }
 
         async function deleteItem(id) {
             if (confirm("Delete this?")) {
-                if (!verifyPIN()) return;
+                const pin = prompt("Enter PIN:");
+                if (pin !== SECURITY_PIN) return;
                 showLoader("Deleting...");
-                try {
-                    await fetch(API_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: "delete", rowId: id }) });
-                    window.location.reload();
-                } catch (e) { document.getElementById('overlay').style.display = 'none'; }
+                await fetch(API_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: "delete", rowId: id }) });
+                window.location.reload();
             }
         }
 
         loadAdminTable();
     </script>
 </body>
-
 
 </html>
