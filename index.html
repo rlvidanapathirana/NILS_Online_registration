@@ -8,6 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
         :root {
             --nils-blue: #003366;
@@ -86,6 +87,7 @@
             text-align: center;
         }
 
+        /* Added for the new search and month filter layout */
         .search-flex {
             display: flex;
             gap: 15px;
@@ -143,7 +145,7 @@
             width: 100%;
             position: relative;
             background: #eee;
-            cursor: pointer;
+            cursor: zoom-in;
             overflow: hidden;
         }
 
@@ -178,7 +180,6 @@
             flex-grow: 1;
             display: flex;
             flex-direction: column;
-            cursor: pointer;
         }
 
         .card h3 {
@@ -200,6 +201,7 @@
             color: var(--nils-blue);
             font-weight: 600;
             font-size: 0.85rem;
+            cursor: pointer;
             text-decoration: underline;
             margin-bottom: 15px;
             display: inline-block;
@@ -236,11 +238,6 @@
             text-decoration: none;
             font-weight: 600;
             transition: 0.3s;
-            display: inline-block;
-        }
-
-        .apply-btn:hover {
-            background: #00509d;
         }
 
         .modal-overlay {
@@ -276,96 +273,6 @@
             font-size: 26px;
             color: var(--text-sub);
             margin-bottom: 10px;
-        }
-
-        /* Unified single-post modal */
-        .post-modal-img-wrap {
-            width: 100%;
-            border-radius: 16px;
-            overflow: hidden;
-            margin-bottom: 20px;
-            background: #f1f5f9;
-            cursor: zoom-in;
-        }
-
-        .post-modal-img {
-            width: 100%;
-            height: auto;
-            display: block;
-            object-fit: contain;
-        }
-
-        .post-modal-meta {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 18px;
-            margin: 14px 0 18px;
-            font-size: 0.9rem;
-            color: var(--text-sub);
-        }
-
-        .post-modal-meta i {
-            color: var(--nils-blue);
-            margin-right: 6px;
-        }
-
-        .post-modal-price {
-            font-size: 1.6rem;
-            font-weight: 800;
-            color: #ea580c;
-            margin: 18px 0;
-        }
-
-        .post-modal-actions {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-            margin-top: 10px;
-        }
-
-        .post-modal-actions .apply-btn {
-            flex: 1;
-            min-width: 160px;
-        }
-
-        .copy-link-btn {
-            background: #f1f5f9;
-            color: var(--text-main);
-            border: 1.5px solid #e2e8f0;
-            padding: 14px 18px;
-            border-radius: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            font-family: 'Poppins', sans-serif;
-            font-size: 0.9rem;
-            transition: 0.2s;
-        }
-
-        .copy-link-btn:hover {
-            background: #e2e8f0;
-        }
-
-        .toast {
-            position: fixed;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #0f172a;
-            color: white;
-            padding: 12px 24px;
-            border-radius: 50px;
-            font-size: 0.85rem;
-            z-index: 6100;
-            opacity: 0;
-            pointer-events: none;
-            transition: 0.3s;
-        }
-
-        .toast.show {
-            opacity: 1;
         }
 
         .img-modal-overlay {
@@ -422,7 +329,8 @@
             header h1 {
                 font-size: 1.8rem;
             }
-
+            
+            /* Responsive for the new search block */
             .search-flex {
                 flex-direction: column;
             }
@@ -430,14 +338,6 @@
             .modal-content {
                 padding: 25px;
                 width: 95%;
-            }
-
-            .post-modal-actions {
-                flex-direction: column;
-            }
-
-            .post-modal-actions .apply-btn {
-                width: 100%;
             }
 
             .img-modal-overlay {
@@ -467,29 +367,13 @@
         <p>National Institute of Labour Studies</p>
     </header>
 
-    <!-- Unified single-post modal: image + title + full description + meta + Register Now + Copy Link -->
-    <div class="modal-overlay" id="postModal" onclick="closePostModal()">
+    <div class="modal-overlay" id="descModal" onclick="closeModal('descModal')">
         <div class="modal-content" onclick="event.stopPropagation()">
-            <span class="close-modal" onclick="closePostModal()"><i class="fa-solid fa-circle-xmark"></i></span>
-            <div class="post-modal-img-wrap" onclick="openImg(document.getElementById('postModalImg').src)">
-                <img id="postModalImg" class="post-modal-img"
-                    onerror="this.src='https://via.placeholder.com/600x600?text=No+Image'">
-            </div>
-            <h2 id="postModalTitle" style="color:var(--nils-blue); font-size:1.6rem; margin-bottom:10px;">Course
-                Title</h2>
-            <div class="post-modal-meta">
-                <span><i class="fa-regular fa-calendar"></i><span id="postModalDate">TBA</span></span>
-                <span><i class="fa-solid fa-location-dot"></i><span id="postModalLocation">NILS</span></span>
-            </div>
-            <div id="postModalDesc"
+            <span class="close-modal" onclick="closeModal('descModal')"><i class="fa-solid fa-circle-xmark"></i></span>
+            <h2 id="modalTitle" style="color:var(--nils-blue); margin-bottom:15px; font-size:1.6rem;">Course Title</h2>
+            <div id="modalBody"
                 style="line-height:1.7; color:var(--text-sub); white-space: pre-line; font-size: 0.95rem;">
                 Description...</div>
-            <div class="post-modal-price" id="postModalPrice">LKR 0</div>
-            <div class="post-modal-actions">
-                <a href="#" target="_blank" id="postModalApply" class="apply-btn">Register Now</a>
-                <button type="button" class="copy-link-btn" onclick="copyPostLink()"><i
-                        class="fa-solid fa-link"></i> Copy Link</button>
-            </div>
         </div>
     </div>
 
@@ -498,23 +382,22 @@
         <img id="fullImg" class="img-zoom-content">
     </div>
 
-    <div class="toast" id="toast">Link copied!</div>
-
     <div class="container">
         <div class="controls-section">
+            
             <div class="search-flex">
                 <input type="text" id="searchInput" class="search-box"
                     placeholder="Search for a course or date (e.g. 2026.03)..." onkeyup="applyFilters()"
                     style="flex: 1; padding:15px; border-radius:14px; border:1px solid #e2e8f0; outline:none;">
-                <input type="month" id="monthFilter" class="search-box" onchange="applyFilters()"
-                    title="Filter by Month"
+                
+                <input type="month" id="monthFilter" class="search-box" onchange="applyFilters()" title="Filter by Month"
                     style="padding:15px; border-radius:14px; border:1px solid #e2e8f0; outline:none; cursor:pointer; color: var(--text-sub); font-family: 'Poppins', sans-serif;">
             </div>
+
             <div class="category-nav" id="categoryNav">
                 <div class="cat-pill active" id="pill-all" onclick="setCat('All')">All Programs</div>
             </div>
         </div>
-
         <div id="loader" style="text-align:center;"><i class="fa-solid fa-spinner fa-spin fa-2x"></i></div>
         <div class="course-grid" id="courseGrid"></div>
     </div>
@@ -522,6 +405,7 @@
     <footer>
         <p>© <span id="year"></span> National Institute of Labour Studies</p>
         <p>Developed by - V.P.R.L. Vidanapathirana</p>
+
         <div style="margin-top: 15px;">
             <a href='https://www.counters-free.net/'
                 style="color: white; text-decoration: none; font-size: 10px; opacity: 0.7;">counter-FREE</a>
@@ -544,6 +428,7 @@
         const API_URL = "https://script.google.com/macros/s/AKfycbxlMiseZ5YjuzOFeNWSaJ5mqQ-EC5tWGIsFbRMGpTCBeGhiqZLLBJRI-Ch2ib6NjFEA/exec";
         let allData = [];
         let currentCat = 'All';
+
         document.getElementById('year').textContent = new Date().getFullYear();
 
         // Kept exactly as in your original file
@@ -562,10 +447,6 @@
                 allData = await r.json();
                 updateNav();
                 applyFilters();
-                // Deep-link: if the URL was opened with ?post=<id>, auto-open that post's modal
-                const params = new URLSearchParams(window.location.search);
-                const initialPost = params.get('post');
-                if (initialPost) openPost(initialPost, false);
             } catch (e) { document.getElementById('loader').innerText = "Failed to load."; }
         }
 
@@ -590,8 +471,9 @@
 
         function applyFilters() {
             const q = document.getElementById('searchInput').value.toLowerCase();
-            const m = document.getElementById('monthFilter').value;
-            const filterMonth = m ? m.replace('-', '.') : '';
+            const m = document.getElementById('monthFilter').value; 
+            const filterMonth = m ? m.replace('-', '.') : ''; 
+
             const today = new Date();
             const todayStr = today.getFullYear() + '.' +
                 String(today.getMonth() + 1).padStart(2, '0') + '.' +
@@ -601,7 +483,9 @@
                 const nameMatch = i.Name && i.Name.toLowerCase().includes(q);
                 const searchDateMatch = i.Date && i.Date.toLowerCase().includes(q);
                 const catMatch = currentCat === 'All' || (i.Category && i.Category.includes(currentCat));
+                
                 const monthMatch = filterMonth === '' || (i.Date && i.Date.startsWith(filterMonth));
+
                 let isPastPostFilter = true;
                 if (i.Date && i.Date !== 'TBA' && i.Date.match(/^\d{4}\.\d{2}\.\d{2}$/)) {
                     isPastPostFilter = i.Date >= todayStr;
@@ -609,6 +493,7 @@
                 return (nameMatch || searchDateMatch) && catMatch && isPastPostFilter && monthMatch;
             });
 
+            // Sorting: Upcoming dates first, 'TBA' goes to the bottom
             filtered.sort((a, b) => {
                 const dateA = a.Date || 'TBA';
                 const dateB = b.Date || 'TBA';
@@ -634,22 +519,25 @@
                 const priceDisp = String(item.Price).toLowerCase() === 'free' ? 'FREE' : 'LKR ' + Number(item.Price).toLocaleString();
                 const imgSrc = fixImg(item.Image_URL);
 
+                const encodedTitle = btoa(unescape(encodeURIComponent(item.Name || "")));
+                const encodedDesc = btoa(unescape(encodeURIComponent(rawDesc)));
+
                 return `
                 <div class="card">
-                    <div class="card-img-container" onclick="openPost('${item.rowId}')">
+                    <div class="card-img-container" onclick="openImg('${imgSrc}')">
                         ${badgeHTML}
                         <img src="${imgSrc}" class="card-img" loading="lazy" onerror="this.src='https://via.placeholder.com/600x600?text=No+Image'">
                     </div>
-                    <div class="card-body" onclick="openPost('${item.rowId}')">
+                    <div class="card-body">
                         <h3>${item.Name || ""}</h3>
                         <div class="card-desc">${shortDesc}</div>
-                        ${isLong ? `<span class="read-more-link">Read More</span>` : ""}
+                        ${isLong ? `<span class="read-more-link" onclick="openDescEncoded('${encodedTitle}', '${encodedDesc}')">Read More</span>` : ""}
                         <div class="info-group">
                             <div class="info-row"><i class="fa-regular fa-calendar"></i> ${item.Date || 'TBA'}</div>
                             <div class="info-row"><i class="fa-solid fa-location-dot"></i> ${item.Location || 'NILS'}</div>
                         </div>
                         <div class="price-tag">${priceDisp}</div>
-                        <a href="${item.Apply_Link || '#'}" target="_blank" class="apply-btn" onclick="event.stopPropagation()">Register Now</a>
+                        <a href="${item.Apply_Link || '#'}" target="_blank" class="apply-btn">Register Now</a>
                     </div>
                 </div>`;
             }).join('');
@@ -664,67 +552,17 @@
             applyFilters();
         }
 
-        // Opens the unified post modal for a given rowId.
-        // updateUrl=true (default) pushes a shareable ?post=<id> URL into history (no page reload).
-        // updateUrl=false is used on initial page load when the URL already contains ?post=<id>.
-        function openPost(rowId, updateUrl = true) {
-            const item = allData.find(i => String(i.rowId) === String(rowId));
-            if (!item) return;
-
-            const imgSrc = fixImg(item.Image_URL);
-            const priceDisp = String(item.Price).toLowerCase() === 'free' ? 'FREE' : 'LKR ' + Number(item.Price).toLocaleString();
-
-            document.getElementById('postModalImg').src = imgSrc;
-            document.getElementById('postModalTitle').innerText = item.Name || "";
-            document.getElementById('postModalDesc').innerHTML = (item.Description || "").replace(/\n/g, '<br>');
-            document.getElementById('postModalDate').innerText = item.Date || 'TBA';
-            document.getElementById('postModalLocation').innerText = item.Location || 'NILS';
-            document.getElementById('postModalPrice').innerText = priceDisp;
-            document.getElementById('postModalApply').href = item.Apply_Link || '#';
-
-            document.getElementById('postModal').style.display = 'flex';
-            document.getElementById('postModal').scrollTop = 0;
-            document.body.style.overflow = 'hidden';
-
-            if (updateUrl) {
-                const url = new URL(window.location.href);
-                url.searchParams.set('post', rowId);
-                history.pushState({ postId: rowId }, '', url);
-            }
+        function openDescEncoded(encTitle, encDesc) {
+            try {
+                const title = decodeURIComponent(escape(atob(encTitle)));
+                const desc = decodeURIComponent(escape(atob(encDesc))).replace(/\n/g, '<br>');
+                document.getElementById('modalTitle').innerText = title;
+                document.getElementById('modalBody').innerHTML = desc;
+                document.getElementById('descModal').style.display = 'flex';
+                document.getElementById('descModal').scrollTop = 0;
+                document.body.style.overflow = 'hidden';
+            } catch (e) { console.error("Error opening modal", e); }
         }
-
-        function closePostModal() {
-            document.getElementById('postModal').style.display = 'none';
-            document.body.style.overflow = 'auto';
-
-            const url = new URL(window.location.href);
-            if (url.searchParams.has('post')) {
-                url.searchParams.delete('post');
-                history.pushState({}, '', url);
-            }
-        }
-
-        function copyPostLink() {
-            navigator.clipboard.writeText(window.location.href).then(() => {
-                const toast = document.getElementById('toast');
-                toast.classList.add('show');
-                setTimeout(() => toast.classList.remove('show'), 2000);
-            }).catch(() => {
-                prompt("Copy this link:", window.location.href);
-            });
-        }
-
-        // Handles browser back/forward so the modal stays in sync with the URL
-        window.addEventListener('popstate', () => {
-            const params = new URLSearchParams(window.location.search);
-            const postId = params.get('post');
-            if (postId) {
-                openPost(postId, false);
-            } else {
-                document.getElementById('postModal').style.display = 'none';
-                document.body.style.overflow = 'auto';
-            }
-        });
 
         function openImg(src) {
             document.getElementById('fullImg').src = src;
@@ -735,7 +573,7 @@
 
         function closeModal(id) {
             document.getElementById(id).style.display = 'none';
-            document.body.style.overflow = document.getElementById('postModal').style.display === 'flex' ? 'hidden' : 'auto';
+            document.body.style.overflow = 'auto';
         }
 
         load();
